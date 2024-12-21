@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Description</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+
+        input[type="file"] {
+            margin: 20px;
+        }
+
+        #descriptionBox {
+            margin-top: 20px;
+            font-weight: bold;
+            padding: 15px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            display: inline-block;
+            width: 80%;
+            min-height: 100px;
+            text-align: center;
+        }
+
+        #description {
+            font-size: 16px;
+            color: #333;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Description Generator</h1>
+    <input type="file" id="fileInput" accept="image/*">
+    <button onclick="uploadImage()">Upload & Generate Description</button>
+    
+    <!-- Box to display the description -->
+    <div id="descriptionBox">
+        <p id="description">Your description will appear here.</p>
+    </div>
+
+    <script>
+        async function uploadImage() {
+            const input = document.getElementById('fileInput');
+            if (!input.files[0]) {
+                alert('Please select an image first!');
+                return;
+            }
+    
+            const formData = new FormData();
+            formData.append('file', input.files[0]);
+    
+            try {
+                // Send image to the backend
+                const response = await fetch('http://127.0.0.1:5000/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+    
+                if (!response.ok) {
+                    // Handle server errors (e.g., file upload failure)
+                    const errorMessage = await response.json();
+                    document.getElementById('description').textContent = `Error: ${errorMessage.error}`;
+                    return;
+                }
+                console.log(1);
+    
+                // Extract the result from the response
+                const result = await response.json();
+                console.log(result); // Log the result for debugging
+    
+                // Check if the description exists in the response
+                if (result.description) {
+                    // Dynamically update the description element with the result from the server
+                    document.getElementById('description').textContent = result.description;
+                } else {
+                    document.getElementById('description').textContent = "No description available.";
+                }
+    
+            } catch (error) {
+                // Handle errors in case of network failure
+                console.error("Error uploading image:", error);
+                document.getElementById('description').textContent = "Error uploading image.";
+            }
+        }
+    </script>    
+</body>
+</html>
