@@ -3,7 +3,7 @@ from PIL import Image
 import os
 import numpy as np
 import re
-GOOGLE_API_KEY='AIzaSyDVzaWeKuZEyL4_tqZB-wvFeGLsH5XBu6c'
+GOOGLE_API_KEY='AIzaSyDVzaWeKuZEyL4_tqZB-wvFeGLsH5XBu6ckk'
 if not GOOGLE_API_KEY:
    raise Exception("Set the GOOGLE_API_KEY environment variable")
 
